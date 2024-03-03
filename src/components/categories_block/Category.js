@@ -109,7 +109,7 @@ const Category = (props) => {
                 index={[props.index, podIndex]}
                 
                 saveField={saveField}
-                category={{ ...props.category , fontSize: '15px' }}
+                category={{ name: subcategory, fontSize: '15px' }}
               />
             </li>
           ))}
