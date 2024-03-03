@@ -258,7 +258,7 @@ const DashboardTable = props => {
     <Card>
       <TableContainer>
         <Table aria-label='table in dashboard'>
-          <TableBody style={{ display: 'flex', backgroundColor: '#ffeeee', flexWrap: 'wrap', justifyContent: 'center', overflowY: 'hidden'}}>
+          <TableBody style={{ display: 'flex', backgroundColor: 'rgb(244 245 250 / 84%)', flexWrap: 'wrap', justifyContent: 'center', overflowY: 'hidden'}}>
             {rows.map((row, i) => (
               <div style={{ margin: '20px 0px 0px 10px', width: '270px', borderRadius: '15px', backgroundColor: '#fff', boxShadow: '5px solid black', boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, )' }}><ItemBox row={row} setRows={ setRows } /></div>
             ))}

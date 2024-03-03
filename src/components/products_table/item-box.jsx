@@ -38,7 +38,7 @@ export function ItemBox({ row, setRows }) {
             display: 'flex',
             alignItems: 'center',
             textAlign: 'center',
-            backgroundColor: '#ffeeee',
+            backgroundColor: 'rgb(205 205 205)',
             width: '90px',
             borderRadius: '5px',
             marginBottom: '3px',
