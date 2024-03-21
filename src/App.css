@@ -260,6 +260,26 @@ code[class*='language-'] {
 /*  */
 
 /* categories block */
+/* modal */
+.modal-input-window{
+  width: 400px;
+  height: 90px;
+  position: absolute;
+  padding: 10px;
+  background: #e7e8f2;
+  border: 1px solid #a3b0d8;
+  margin-left: 356px;
+  
+}
+#md-button{ 
+    margin-top: 10px;
+    width: 100px;
+    height: 30px;
+    background: #606168;
+    border: 1px solid black;
+    color: white;
+}
+/* ___ */
 #categ_button{
   height: 20px;
   margin-left: 15px;
