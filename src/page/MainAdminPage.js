@@ -1,6 +1,6 @@
 // packages
 import React from 'react';
-import Grid from '@mui/material/Grid'
+
 import Table from '../components/products_table/Table'
 import Header from '../components/Header'
 import Categories from '../components/categories_block/Categories'
