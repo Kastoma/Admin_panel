@@ -10,18 +10,19 @@ import TableCell from '@mui/material/TableCell'
 import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Modal } from './modal.jsx'
 
 import { ItemBox } from './item-box.jsx'
-
+import { SearchBar } from './search-bar.jsx'
+import { Sort } from './sorting.jsx'
 const DashboardTable = props => {
   const [rows, setRows] = useState([
     {
       id: 13425,
       price: 2.05,
-      deliveryPrice: '₴ 0',
+      deliveryPrice: '0',
       title: 'Updated Item 1',
       img: '13425.jpg',
       desc: 'Чехол TPU+PC Army Collection для Apple iPhone XS Max (6.5") (Зеленый)',
@@ -254,15 +255,75 @@ const DashboardTable = props => {
       quantity: 3
     }
   ])
+  const [selectedSort, setSelectedSort] = useState('')
+  const [isEmpty, setIsEmpty] = useState(false)
+  const [searchQuery, setSearchQuery] = useState()
+  const [edittingItem, setEdittingItem] = useState()
+  const modal = useRef()
+
+  const sortedItems = useMemo(() => {
+    switch (selectedSort) {
+      case 'Description':
+        return [...rows].sort((a, b) => a.desc.localeCompare(b.desc))
+      case 'Price':
+        return [...rows].sort((a, b) => a.price - b.price)
+      case 'Category':
+        return [...rows].sort((a, b) => a.category.localeCompare(b.category))
+      case 'Publication date':
+        return [...rows].sort((a, b) => new Date(a.publicationDate).getTime() - new Date(b.publicationDate).getTime())
+      default: 
+        return [...rows]
+    }
+  }, [selectedSort, rows])
+
+const sortedAndSearchedItems = useMemo(() => {
+  if (searchQuery) {
+    const filteredItems = sortedItems.filter(item => item.id.toString().includes(searchQuery))
+    setIsEmpty(filteredItems.length === 0)
+    return filteredItems
+  } else {
+    setIsEmpty(false)
+    return sortedItems
+  }
+}, [searchQuery, sortedItems])
+
+  function sortItems(e, name) {
+    e.stopPropagation()
+    setSelectedSort(name)
+    // через ref не работает о_0 :)
+    document.querySelector('.options-container').style.display = 'none'
+  }
+
+  const sortMethods = [
+    { value: 'desc', name: 'Description' },
+    { value: 'price', name: 'Price' },
+    { value: 'category', name: 'Category' },
+    { value: 'publicationDate', name: 'Publication date' }
+  ];
+
+  // function editObj(wish, ID) {
+  //   switch (wish) {
+  //     case 'post':
+  //       return setEdittingItem([...rows].filter(item => item.id == ID))
+  //     case 'get':
+  //       return edittingItem
+  //   }
+  // }
+
   return (
     <Card>
       <TableContainer>
         <Table aria-label='table in dashboard'>
-          <TableBody style={{ display: 'flex', backgroundColor: 'rgb(244 245 250 / 84%)', flexWrap: 'wrap', justifyContent: 'center', overflowY: 'hidden'}}>
-            {rows.map((row, i) => (
-              <div style={{ margin: '20px 0px 0px 10px', width: '270px', borderRadius: '15px', backgroundColor: '#fff', boxShadow: '5px solid black', boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, )' }}><ItemBox row={row} setRows={ setRows } /></div>
-            ))}
-            <Modal rows={ rows } setRows={setRows} />
+          <div className='header-container'>
+            <SearchBar setInputValue={setSearchQuery} />
+            <Sort options={sortMethods} selectedSort={selectedSort} onClick={sortItems} />
+          </div>
+          <TableBody style={{ minHeight: '505px', display: 'flex', backgroundColor: 'rgb(244 245 250 / 84%)', flexWrap: 'wrap', justifyContent: 'center', overflowY: 'hidden'}}>
+            {isEmpty
+              ? <span className='isEmpty'>0 items were found :(</span>
+              : sortedAndSearchedItems.map((row, i) => <div key={i} className="card"><ItemBox row={row} setRows={setRows} modal={modal} editObj={ setEdittingItem } /></div>)
+              }
+            <Modal editObj={ edittingItem} ref={modal} modal={ modal } rows={rows} setRows={setRows} />
           </TableBody>
         </Table>
       </TableContainer>

@@ -1,15 +1,10 @@
+import React from 'react'
 import { ModalContainer } from './modal-container'
 
-export function Modal({ rows, setRows }) {
-  let receivedObj
-
-  if (rows.filter(e => e.currentObject !== undefined).length > 0) {
-    receivedObj = rows.filter(e => e.currentObject !== undefined)[0]
-  }
-
+export const Modal = React.forwardRef(({ rows, setRows, editObj, modal }, ref) => {
   return (
-    <div className='modal-hidden'>
-      <ModalContainer obj={receivedObj} setRows={setRows} rows={rows} />
+    <div ref={ref} className='modal-hidden'>
+      <ModalContainer editObj={editObj} setRows={setRows} rows={rows} modal={modal} />
     </div>
   )
-}
+})

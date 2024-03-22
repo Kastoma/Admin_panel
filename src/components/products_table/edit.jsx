@@ -1,21 +1,8 @@
-export function Edit({ obj, setRows }) {
+export function Edit({ obj, modal, editObj }) {
   function editClick() {
-    const modal = document.querySelector('.modal-hidden')
-    modal.classList.add('modal-visible')
-    modal.classList.remove('modal-hidden')
-    setRows(e =>
-      e.map(row => {
-        if (row.id == obj.id) {
-          // добавляю поле со значением тру что бы отследить какой товар отрисовывать в модалке
-          row.currentObject = true
-          console.log(row)
-
-          return row
-        }
-
-        return row
-      })
-    )
+    modal.current.className = 'modal-visible'
+    
+    editObj(obj)
   }
 
   return (

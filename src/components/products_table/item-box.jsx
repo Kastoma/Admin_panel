@@ -1,96 +1,53 @@
-import { lightBlue } from '@mui/material/colors'
-import { Edit } from './edit'
+import { Edit } from "./edit";
 
-export function ItemBox({ row, setRows }) {
+export function ItemBox({ row, setRows, modal, editObj }) {
   return (
-    <div className='item__content' style={{ margin: '10px' }}>
-      <div
-        className='status__wrapper'
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderBottom: '1px solid #3c4552'
-        }}
-      >
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-          <div
-            style={{
-              width: '55px',
-              textAlign: 'center',
-              padding: '3px',
-              backgroundColor: 'royalBlue',
-              borderRadius: '8px',
-              color: 'white',
-              fontWeight: '700',
-              height: '25px',
-              fontSize: '12px',
-              position: 'absolute'
-            }}
-          >
-            status
-          </div>
+    <div className="item__content" style={{ margin: "10px" }}>
+      <div className="status-container">
+        <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+          <div className="status">status</div>
         </div>
-        <div
-          style={{
-            height: '150px',
-            display: 'flex',
-            alignItems: 'center',
-            textAlign: 'center',
-            backgroundColor: 'rgb(205 205 205)',
-            width: '90px',
-            borderRadius: '5px',
-            marginBottom: '3px',
-            marginTop: '10px'
-          }}
-        >
-          <img src='' alt='here will be image' />
+        <div className="img-container">
+          <img
+            className="item-img"
+            src={
+              require(`../../../images/${row.img}`)
+                ? require(`../../../images/${row.img}`)
+                : null
+            }
+            alt="image"
+          />
         </div>
-        <div style={{ width: '100%', marginBottom: '3px', display: 'flex', justifyContent: 'space-between' }}>
-          <div
-            style={{
-              width: '70px',
-              marginLeft: '10px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'orange',
-              textAlign: 'center',
-              color: 'white',
-              borderRadius: '5px',
-              fontSize: '15px'
-            }}
-          >
-            {row.quantity + ' left'}
+        <div className="general-info">
+          <div className="quantity-container">
+            {row.quantity + " left"}
           </div>
-          <span style={{ color: '#999999' }}>#{row.id}</span>
+          <span style={{ color: "#999999" }}>#{row.id}</span>
         </div>
       </div>
       <div>
-        <p style={{ height: '80px' }}>{row.desc}</p>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            color: 'black',
-            fontSize: '17px',
-            paddingBottom: '15px',
-            borderBottom: '1px solid #3c4552'
-          }}
-        >
+        <p style={{ height: "80px" }}>{row.desc}</p>
+        <div className="price-container">
           <span>{row.price}</span>
           <span>{row.deliveryPrice}</span>
         </div>
       </div>
-      <div style={{ margin: '35px 0 35px 0', display: 'flex', justifyContent: 'center', width: '100%' }}>
-        <Edit setRows={ setRows } obj={row} />
-        <button
-          className='basket'
-        >
-          к
+      <div className="footer-container"
+      >
+        <Edit obj={row} modal={modal} editObj={ editObj } />
+        <button className="basket">
+          <svg
+            className="cart"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 576 512"
+          >
+            <path
+              d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"
+              fill="#19a661"
+            ></path>
+          </svg>
         </button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Uploader } from './img-uploader'
 
-export function ModalContainer({ obj, setRows, rows }) {
+export function ModalContainer({ editObj, setRows, rows, modal }) {
+
+  let obj = editObj 
+
   // cтейт со значениями инпутов
   const [editedValues, setEditedValues] = useState({})
   // стейт цветов
   const [colorsArr, setColorsArr] = useState([])
+
+  // элемент инпута type='file'
+  const filePicker = useRef(null)
 
   // запись цветов в стейт
   useEffect(() => {
@@ -29,30 +36,21 @@ export function ModalContainer({ obj, setRows, rows }) {
   }
 
   function modalHider() {
-    const modal = document.querySelector('.modal-visible')
-    modal.classList.add('modal-hidden')
-    modal.classList.remove('modal-visible')
-
-    setRows(
-      rows.map(e => {
-        if (e.currentObject) {
-          delete e.currentObject
-        }
-        return e
-      })
-    )
+    return modal.current.className = 'modal-hidden'
   }
 
   function modalEditClick() {
     setRows(
-      rows.map(e => {
-        if (e.currentObject) {
+      [...rows].map(e => {
+        if (e.id == obj.id) {
           for (let key in e) {
             if (
               editedValues.hasOwnProperty(key) &&
               e[key] !== editedValues[key] &&
               key !== 'colors' &&
-              key !== 'publicationDate'
+              key !== 'publicationDate' && 
+              key !== 'display' &&
+              key !== 'price'
             ) {
               // запись в стейт товаров
               e[key] = editedValues[key]
@@ -68,6 +66,9 @@ export function ModalContainer({ obj, setRows, rows }) {
               e[key].map((el, i) => {
                 el.color = colorsArr[i].color
               })
+            } else if (key == 'price' && editedValues.hasOwnProperty(key)) {
+              e[key] = Number(editedValues[key])
+              console.log(e[key])
             }
           }
 
@@ -82,8 +83,8 @@ export function ModalContainer({ obj, setRows, rows }) {
   if (obj) {
     // скелет модалки
     return (
-      // закрывашка
       <div className='modal-cell_content'>
+              {/* закрывашка */}
         <div onClick={modalHider} className='close-wrapper'>
           <div className='close-border'>
             <div className='close'></div>
@@ -92,12 +93,13 @@ export function ModalContainer({ obj, setRows, rows }) {
         {Object.entries(obj).map(data => {
           const key = data[0]
           const value = data[1]
-          if (key !== 'img' && key !== 'colors' && key !== 'info' && key !== 'currentObject') {
+          if (key !== 'img' && key !== 'colors' && key !== 'info' && key !== 'currentObject' && key !== 'display') {
             if (key === 'publicationDate') {
               return (
                 <div className='item-block' key={key}>
-                  <span>{key}</span>
+                  <span key={value}>{key}</span>
                   <input
+                    key={value + key}
                     className='modal-input'
                     type='text'
                     value={editedValues[key] !== undefined ? editedValues[key] : value}
@@ -106,11 +108,26 @@ export function ModalContainer({ obj, setRows, rows }) {
                   />
                 </div>
               )
+            } else if (key == 'id') {
+              return (
+                <div className='item-block' key={key}>
+                  <span key={value}>{key}</span>
+                  <input
+                    key={value + key}
+                    disabled
+                    className='modal-input'
+                    type='text'
+                    value={editedValues[key] !== undefined ? editedValues[key] : value}
+                    onChange={event => handleInputChange(event, key)}
+                  />
+                </div>
+              )
             } else {
               return (
                 <div className='item-block' key={key}>
-                  <span>{key}</span>
+                  <span key={value}>{key}</span>
                   <input
+                    key={value + key}
                     className='modal-input'
                     type='text'
                     value={editedValues[key] !== undefined ? editedValues[key] : value}
@@ -122,18 +139,19 @@ export function ModalContainer({ obj, setRows, rows }) {
           } else if (key === 'colors') {
             return (
               <div className='colors-container' key={key}>
-                <span>{key}</span>
+                  <span key={value}>{key}</span>
                 {value.map((e, i) => (
-                  <div className='color-block' key={e.color}>
+                  <div className='color-block' key={e.color + i}>
                     <input
-                      key={i}
+                      key={i + key}
                       className='input-color'
                       type='color'
                       defaultValue={e.color}
                       onChange={event => handleColorChange(event, i)}
                     />
-                    <svg className='arrow-user' width={20} height={15} viewBox='0 0 20 15' fill='none'>
+                    <svg className='arrow-user' width={20} height={15} viewBox='0 0 20 15' fill='none' key={'arrow' + key}>
                       <path
+                        key={'path' + key}
                         d='M 0 5 L 12 5 M 0 5 L 5 0 M 0 5 L 5 10'
                         fill='transparent'
                         stroke='#19a66'
@@ -144,6 +162,12 @@ export function ModalContainer({ obj, setRows, rows }) {
                   </div>
                 ))}
               </div>
+            )
+          } else if (key == 'img') {
+            return (<div className='upload-container' key={key}>
+              <span key={value}>Choose an image</span>
+              <Uploader key={value + key} ref={filePicker} currentRowId={ obj.id }/>
+            </div>
             )
           }
         })}
