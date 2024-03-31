@@ -16,6 +16,7 @@
     "express-fileupload": "^1.4.3",
     "formidable": "^3.5.1",
     "multer": "^1.4.5-lts.1",
+    "buffer": "^6.0.3",
     "mysql": "^2.18.1",
     "next": "^14.1.1",
     "path": "^0.12.7",

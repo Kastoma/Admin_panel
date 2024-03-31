@@ -1,6 +1,5 @@
 import Category from "./Category";
 import React, { useState, useEffect } from 'react';
-import { Modal } from "./categories-modal";
 
 const Categories = ({ categories }) => {
     const [categoriesState, setCategories] = useState(categories);
