@@ -1,6 +1,7 @@
 {
   "categories": [
     {
+      "isParent": true,
       "name": "Чехлы",
       "subcategories": [
         {
@@ -39,6 +40,7 @@
       ]
     },
     {
+      "isParent": true,
       "name": "Стекла / пленки",
       "subcategories": [
         {
@@ -95,10 +97,10 @@
         }
       ]
     },
-    { "name": "Зарядные Устройства", "subcategories": [] },
-    { "name": "Аудио", "subcategories": [] },
-    { "name": "Автоаксессуары", "subcategories": [] },
-    { "name": "Кабели / Переходники", "subcategories": [] },
-    { "name": "Для дома / Офиса", "subcategories": [] }
+    { "isParent": true, "name": "Зарядные Устройства", "subcategories": [] },
+    { "isParent": true,"name": "Аудио", "subcategories": [] },
+    { "isParent": true,"name": "Автоаксессуары", "subcategories": [] },
+    { "isParent": true,"name": "Кабели / Переходники", "subcategories": [] },
+    { "isParent": true,"name": "Для дома / Офиса", "subcategories": [] }
   ]
 }

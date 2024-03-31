@@ -14,7 +14,7 @@ export function SearchBar({ setInputValue }) {
         <input
           onChange={handleInputChange}
           className="search-input"
-          placeholder="ID..."
+          placeholder="Find..."
           type="text"
           value={inputValue}
         />

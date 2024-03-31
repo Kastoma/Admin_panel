@@ -1,27 +1,31 @@
+import { useRef } from "react";
 import { Edit } from "./edit";
 
-export function ItemBox({ row, setRows, modal, editObj }) {
+export function ItemBox({ row, rows, setRows }) {
+
+  const editBtn = useRef(null);
+
   return (
-    <div className="item__content" style={{ margin: "10px" }}>
+    <div className="item__content" style={{ margin: "10px" }} onClick={() => editBtn.current.click()}>
       <div className="status-container">
-        <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+        <div
+          style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}
+        >
           <div className="status">status</div>
         </div>
         <div className="img-container">
           <img
             className="item-img"
             src={
-              require(`../../../images/${row.img}`)
-                ? require(`../../../images/${row.img}`)
+              require(`../../../../images/${row.img}`)
+                ? require(`../../../../images/${row.img}`)
                 : null
             }
             alt="image"
           />
         </div>
         <div className="general-info">
-          <div className="quantity-container">
-            {row.quantity + " left"}
-          </div>
+          <div className="quantity-container">{row.quantity + " left"}</div>
           <span style={{ color: "#999999" }}>#{row.id}</span>
         </div>
       </div>
@@ -32,10 +36,9 @@ export function ItemBox({ row, setRows, modal, editObj }) {
           <span>{row.deliveryPrice}</span>
         </div>
       </div>
-      <div className="footer-container"
-      >
-        <Edit obj={row} modal={modal} editObj={ editObj } />
-        <button className="basket">
+      <div className="footer-container">
+        <Edit obj={row} rows={rows} setRows={setRows} ref={editBtn} />
+        <button className="basket" onClick={(e) => e.stopPropagation()}>
           <svg
             className="cart"
             xmlns="http://www.w3.org/2000/svg"

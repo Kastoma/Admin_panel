@@ -11,7 +11,7 @@ app.post("/api/upload", (req, res) => {
   console.log('currentRowId:', currentRowId);
 
   const generateFileName = (currentRowId) => (req, file, cb) => {
-    const filename = `${currentRowId}.jpg`;
+    const filename = `${currentRowId}`;
     cb(null, filename);
   };
 
