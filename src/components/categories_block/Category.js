@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 
 const Category = (props) => {
   const [editing, setEditing] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const saveField = (lastResult, fieldString) => {
+  const saveField = (lastResult, fieldString, option, indexPath) => {
     console.log(
       'last Result:',
       lastResult,
@@ -14,40 +15,14 @@ const Category = (props) => {
       fieldString
     );
     if (Array.isArray(lastResult)) {
-      lastResult.push(props.category.name);
-      if (props.saveField) {
-        console.log('should be here');
-        props.saveField(lastResult, fieldString);
-      } else {
-        // Call saveField recursively for nested categories
-        props.category.subcategories &&
-          Object.keys(props.category.subcategories).forEach((subcategory, podIndex) => {
-            const nestedCategoryIndex = [...lastResult, podIndex];
-            <Category
-              index={nestedCategoryIndex}
-              saveField={saveField}
-              category={{ name: subcategory, fontSize: '15px' }}
-            />;
-          });
-      }
+        props.saveField(lastResult, fieldString, option, indexPath);
+      
     } else {
-      if (props.saveField) {
-        props.saveField([props.category.name],fieldString);
-      } else {
-        // Call saveField recursively for nested categories
-        props.category.subcategories &&
-          Object.keys(props.category.subcategories).forEach((subcategory, podIndex) => {
-            const nestedCategoryIndex = [props.index, podIndex];
-            <Category
-              index={nestedCategoryIndex}
-              saveField={saveField}
-              category={{ name: subcategory, fontSize: '15px' }}
-            />;
-          });
+        props.saveField([props.category.name],fieldString, option, [indexPath]);
+      
       }
     }
-  };
-
+ 
   const handleEditClick = () => {
     setEditing(true);
     setInputValue(props.category.name);
@@ -60,15 +35,37 @@ const Category = (props) => {
 
   const handleSaveClick = () => {
     setEditing(false);
-    if (props.saveField) {
-      props.saveField(props.category.name, inputValue);
+    if (Array.isArray(props.index)) {
+      props.saveField(props.index, inputValue, 'save', props.path);
     } else {
-      //Categories shit
+      props.saveField([props.index], inputValue, 'save', [props.path]);
     }
   };
+  const AddCategory = () =>{
+  props.showInput(props.path,props.index)
+  }
+  const showInput = (arrIndex, arrPath) => {
+    if(Array.isArray(arrIndex) && Array.isArray(arrPath)){
+        props.showInput(arrIndex, arrPath)
+    }else{
+      props.showInput([arrIndex], [arrPath])
+    }
+     
+  } 
 
+  const deleteClick = () => {
+    setEditing(false);
+    if (Array.isArray(props.index)) {
+      props.saveField(props.index, '', 'delete', props.path);
+    } else {
+      props.saveField([props.index], '', 'delete', [props.path]);
+    }
+  };
+  
+ 
   return (
     <div style={{ width: '50%' }}>
+     
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {editing ? (
           <input
@@ -92,26 +89,50 @@ const Category = (props) => {
         {editing ? (
           <button onClick={handleSaveClick}>save</button>
         ) : (
-          <button id="categ_button" onClick={handleEditClick}>
-            edit
-          </button>
+          <>
+            <button id="categ_button" onClick={handleEditClick}>
+              edit
+            </button> 
+            <button id="categ_button" onClick={AddCategory}>add</button>
+            <button id="categ_button" onClick={deleteClick}>delete</button>
+          
+          </>
         )}
-        <button id="categ_button">delete</button>
+       
       </div>
       {props.category.subcategories && (
         <ul>
-          {Object.keys(props.category.subcategories).map((subcategory, podIndex) => (
-            
-            <li key={subcategory}>
-              {console.log(subcategory)}
-              {/* Recursively call Category for each subcategory */}
-              <Category
-                index={[props.index, podIndex]}
-                
+          {props.category.subcategories.map((subcategory, podIndex) => (
+            <div key={podIndex}>  
+              <li
                 saveField={saveField}
                 category={{ name: subcategory, fontSize: '15px' }}
-              />
+              >
+             
+              <Category 
+                  showInput={showInput} 
+                  path={[props.indexNumber, podIndex]} 
+                  index={[props.category.name, subcategory]} 
+                  saveField={saveField} 
+                  category={{ name: subcategory.name, fontSize: '15px' }} 
+                />
+
+                <div>
+                 {subcategory.subcategories.length > 0 && subcategory.subcategories.map((thirdStepItem, ThirdIndex)=>{
+                  return(
+                    <Category showInput={showInput}
+                              path={[props.indexNumber,
+                              podIndex, ThirdIndex]} 
+                              index={[props.category.name , subcategory, thirdStepItem.name]} 
+                              saveField={saveField} 
+                      category={{ name: thirdStepItem.name, fontSize: '13px' }}
+                    />
+                      )
+                  })} 
+              </div>
             </li>
+            </div>
+          
           ))}
         </ul>
       )}
